@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		959BB2C12BFE618D008618B4 /* NoteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 959BB2C02BFE618D008618B4 /* NoteViewController.swift */; };
+		959BB2C32BFE62BC008618B4 /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = 959BB2C22BFE62BC008618B4 /* Note.swift */; };
 		95B434B12BF9579D003EAEF5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B434B02BF9579D003EAEF5 /* AppDelegate.swift */; };
 		95B434B32BF9579D003EAEF5 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B434B22BF9579D003EAEF5 /* SceneDelegate.swift */; };
 		95B434B52BF9579D003EAEF5 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B434B42BF9579D003EAEF5 /* ViewController.swift */; };
@@ -16,6 +18,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		959BB2C02BFE618D008618B4 /* NoteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteViewController.swift; sourceTree = "<group>"; };
+		959BB2C22BFE62BC008618B4 /* Note.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
 		95B434AD2BF9579D003EAEF5 /* MemoVault.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MemoVault.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		95B434B02BF9579D003EAEF5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		95B434B22BF9579D003EAEF5 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -59,6 +63,8 @@
 				95B434B02BF9579D003EAEF5 /* AppDelegate.swift */,
 				95B434B22BF9579D003EAEF5 /* SceneDelegate.swift */,
 				95B434B42BF9579D003EAEF5 /* ViewController.swift */,
+				959BB2C02BFE618D008618B4 /* NoteViewController.swift */,
+				959BB2C22BFE62BC008618B4 /* Note.swift */,
 				95B434B62BF9579D003EAEF5 /* Main.storyboard */,
 				95B434B92BF9579E003EAEF5 /* Assets.xcassets */,
 				95B434BB2BF9579E003EAEF5 /* LaunchScreen.storyboard */,
@@ -138,6 +144,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				959BB2C32BFE62BC008618B4 /* Note.swift in Sources */,
+				959BB2C12BFE618D008618B4 /* NoteViewController.swift in Sources */,
 				95B434B52BF9579D003EAEF5 /* ViewController.swift in Sources */,
 				95B434B12BF9579D003EAEF5 /* AppDelegate.swift in Sources */,
 				95B434B32BF9579D003EAEF5 /* SceneDelegate.swift in Sources */,
