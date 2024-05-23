@@ -9,13 +9,7 @@ import Foundation
 
 
 struct Note: Codable {
-    var id: UUID = UUID()
-    var title: String = "New note"
-    var content: String = ""
-    var creationDate: Date = Date.now
-    
-    var hasContent: Bool {
-        return !content.isEmpty
-    }
+    var text: String
+    var date: Date
     
 }
