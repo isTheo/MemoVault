@@ -7,4 +7,5 @@ It's still a work in progress.
 
 
 
-![Simulator Screen Recording - iPhone 15 - 2024-05-22 at 20 43 17](https://github.com/isTheo/MemoVault/assets/149708189/7a8de90a-61e8-4582-b1a6-28b80da877a0)
+https://github.com/isTheo/MemoVault/assets/149708189/fd64c65d-dc09-4df3-82f6-3c4102bc32b5
+
