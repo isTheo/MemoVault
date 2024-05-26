@@ -5,22 +5,48 @@
 //  Created by Matteo Orru on 22/05/24.
 //
 
+
 import UIKit
 
+
+protocol NoteViewControllerDelegate: AnyObject {
+    func didSaveNote(_ note: Note, at index: Int?)
+}
+
+
 class NoteViewController: UIViewController {
+    var note: Note?
+    var noteIndex: Int?
+    weak var delegate: NoteViewControllerDelegate?
     
     let textView = UITextView()
-    var noteText: String?
 
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
         setupUI()
+        view.backgroundColor = .systemBackground
+        
+        if let note = note {
+            textView.text = note.text
+        }
+        
+
+
     }
     
     
+
+    
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        coordinator.animate(alongsideTransition: { context in
+        }, completion: nil)
+    }
+
+    
+
     func setupUI() {
         textView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(textView)
@@ -31,37 +57,49 @@ class NoteViewController: UIViewController {
         textView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
         textView.font = UIFont.systemFont(ofSize: 16)
         
+        updateTextViewAppearance()
+        
         textView.becomeFirstResponder()
+                
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(done))
         
-        let doneButton = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(done))
-        navigationItem.rightBarButtonItem = doneButton
-        
-        let backButton = UIBarButtonItem(title: "Notes", style: .plain, target: self, action: #selector(back))
-        navigationItem.leftBarButtonItem = backButton
-        
-        textView.text = noteText
-        
+        let backButton = UIBarButtonItem(title: "Notes", style: .plain, target: self, action: #selector(goBack))
+        let backButtonIcon = UIBarButtonItem(image: UIImage(systemName: "chevron.left"), style: .plain, target: nil, action: nil)
+        let backButtonTitle = UIBarButtonItem(title: "Notes", style: .plain, target: self, action: #selector(goBack))
+
+        navigationItem.leftBarButtonItems = [backButtonIcon, backButtonTitle]
+
     }
+    
+    
+    
+    func updateTextViewAppearance() {
+        textView.backgroundColor = .systemBackground
+        textView.textColor = .label
+    }
+
     
     
     @objc func done() {
-        guard let noteText = textView.text, !noteText.isEmpty else {return}
-        //recupera la nota salvata
-        var notes = UserDefaults.standard.array(forKey: "notes") as? [String] ?? []
+        guard let noteText = textView.text?.trimmingCharacters(in: .whitespacesAndNewlines), !noteText.isEmpty else {
+            return
+        }
         
-        notes.append(noteText)
-        
-        UserDefaults.standard.set(notes, forKey: "notes")
-        
+        let note = Note(text: noteText, date: Date())
+        delegate?.didSaveNote(note, at: noteIndex)
         
         dismiss(animated: true, completion: nil)
     }
+
     
-    @objc func back() {
+    
+    @objc func goBack() {
         dismiss(animated: true, completion: nil)
     }
     
+
     
     
     
 }
+

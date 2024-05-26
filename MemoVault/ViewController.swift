@@ -14,79 +14,60 @@ Tapping on a note should slide in a detail view controller that contains a full-
 
 import UIKit
 
-class ViewController: UITableViewController {
-    var notes: [String] = []
-    
+class ViewController: UITableViewController, NoteViewControllerDelegate {
+    var notes: [Note] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         navigationItem.title = "Notes"
         navigationController?.navigationBar.prefersLargeTitles = true
-        
-/* dovrebbe risultare in una barra traslucida...
-         navigationController?.navigationBar.shadowImage = UIImage()
-        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
-            self.navigationController?.navigationBar.shadowImage = UIImage()
-            self.navigationController?.navigationBar.isTranslucent = true
-            self.navigationController?.view.backgroundColor = UIColor.clear
-            navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
-*/
-        
-        
         setupToolbarButton()
         loadNotes()
     }
-    
-    
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         loadNotes()
     }
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return notes.count
     }
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "NoteCell") ?? UITableViewCell(style: .default, reuseIdentifier: "Notecell")
-        cell.textLabel?.text = notes[indexPath.row]
-        
+        let cell = tableView.dequeueReusableCell(withIdentifier: "NoteCell") ?? UITableViewCell(style: .subtitle, reuseIdentifier: "NoteCell")
+        let note = notes[indexPath.row]
+        cell.textLabel?.text = note.text
+        cell.detailTextLabel?.text = DateFormatter.localizedString(from: note.date, dateStyle: .short, timeStyle: .short)
         return cell
     }
+    
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
         let noteEditorVC = NoteViewController()
-        noteEditorVC.noteText = notes[indexPath.row]
-          let navigationController = UINavigationController(rootViewController: noteEditorVC)
+        noteEditorVC.note = notes[indexPath.row]
+        noteEditorVC.noteIndex = indexPath.row
+        noteEditorVC.delegate = self
+        
+        let navigationController = UINavigationController(rootViewController: noteEditorVC)
         navigationController.modalPresentationStyle = .fullScreen
         present(navigationController, animated: true, completion: nil)
     }
     
-    //slide per cancellare una nota
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { (action, view, completionHandler) in
-            // Rimuovi la nota dall'array
             self.notes.remove(at: indexPath.row)
-            
-            //aggiorna UserDefaults
-            UserDefaults.standard.set(self.notes, forKey: "notes")
-            
-            //rimuove la riga dalla tableview
+            NoteManager.shared.saveNotes(self.notes)
             tableView.deleteRows(at: [indexPath], with: .automatic)
-            
             completionHandler(true)
         }
         
-        //aggiunge l'icona classica del cestino
         deleteAction.image = UIImage(systemName: "trash")
-        
-        //crea la configurazione delle azioni di swipe
         let configuration = UISwipeActionsConfiguration(actions: [deleteAction])
         return configuration
     }
-    
-    
     
     func setupToolbarButton() {
         let spacer = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
@@ -97,27 +78,34 @@ class ViewController: UITableViewController {
         navigationController?.isToolbarHidden = false
     }
     
-    
-    
     @objc func composeNote() {
         let noteEditorVC = NoteViewController()
+        noteEditorVC.delegate = self
+        
         let navigationController = UINavigationController(rootViewController: noteEditorVC)
         navigationController.modalPresentationStyle = .fullScreen
         present(navigationController, animated: true, completion: nil)
-        print("View controller appeared")
     }
     
     func loadNotes() {
-        notes = UserDefaults.standard.array(forKey: "notes") as? [String] ?? []
+        notes = NoteManager.shared.loadNotes()
+        tableView.reloadData()
+    }
+    
+    // MARK: - NoteViewControllerDelegate
+    func didSaveNote(_ note: Note, at index: Int?) {
+        if let index = index {
+            notes[index] = note
+        } else {
+            notes.append(note)
+        }
+        NoteManager.shared.saveNotes(notes)
         tableView.reloadData()
     }
     
     
     
     
-    
-    
-    
-    
 }
+
 
