@@ -22,6 +22,7 @@ class ViewController: UITableViewController {
         super.viewDidLoad()
         
         navigationItem.title = "Notes"
+        navigationController?.navigationBar.prefersLargeTitles = true
         
 /* dovrebbe risultare in una barra traslucida...
          navigationController?.navigationBar.shadowImage = UIImage()
@@ -31,13 +32,8 @@ class ViewController: UITableViewController {
             self.navigationController?.view.backgroundColor = UIColor.clear
             navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
 */
-        navigationController?.navigationBar.prefersLargeTitles = true
         
         
-        //view.backgroundColor = UIColor(red: 60/255, green: 60/255, blue: 61/255, alpha: 1.0)
-        
-
-
         setupToolbarButton()
         loadNotes()
     }

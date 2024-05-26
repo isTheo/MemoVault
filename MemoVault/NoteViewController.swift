@@ -13,14 +13,11 @@ class NoteViewController: UIViewController {
     var noteText: String?
 
     
-
     override func viewDidLoad() {
         super.viewDidLoad()
         
         
         setupUI()
-        //view.backgroundColor = .gray
-        
     }
     
     
