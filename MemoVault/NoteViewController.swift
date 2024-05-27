@@ -61,11 +61,15 @@ class NoteViewController: UIViewController {
         
         textView.becomeFirstResponder()
                 
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(done))
+        let doneButton = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(done))
+        doneButton.tintColor = UIColor(red: 236/255, green: 180/255, blue: 130/255, alpha: 1.0)
+        navigationItem.rightBarButtonItem = doneButton
         
-        let backButton = UIBarButtonItem(title: "Notes", style: .plain, target: self, action: #selector(goBack))
+
         let backButtonIcon = UIBarButtonItem(image: UIImage(systemName: "chevron.left"), style: .plain, target: nil, action: nil)
         let backButtonTitle = UIBarButtonItem(title: "Notes", style: .plain, target: self, action: #selector(goBack))
+        backButtonTitle.tintColor = UIColor(red: 236/255, green: 180/255, blue: 130/255, alpha: 1.0)
+        backButtonIcon.tintColor = UIColor(red: 236/255, green: 180/255, blue: 130/255, alpha: 1.0)
 
         navigationItem.leftBarButtonItems = [backButtonIcon, backButtonTitle]
 

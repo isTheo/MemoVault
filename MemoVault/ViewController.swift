@@ -69,6 +69,7 @@ class ViewController: UITableViewController, NoteViewControllerDelegate {
         return configuration
     }
     
+    
     func setupToolbarButton() {
         let spacer = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
         let composeNoteButton = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: #selector(composeNote))
@@ -92,7 +93,7 @@ class ViewController: UITableViewController, NoteViewControllerDelegate {
         tableView.reloadData()
     }
     
-    // MARK: - NoteViewControllerDelegate
+    
     func didSaveNote(_ note: Note, at index: Int?) {
         if let index = index {
             notes[index] = note
