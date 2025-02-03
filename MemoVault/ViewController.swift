@@ -4,18 +4,18 @@
 //
 //  Created by Matteo Orru on 18/05/24.
 //
-/*
- 
-The table view controller lists notes.
-Tapping on a note should slide in a detail view controller that contains a full-screen text view.
- Notes should be loaded and saved using Codable.
- Add a toolbar items to the detail view controller like “delete” and “compose” and an action button to the navigation bar in the detail view controller that shares the text using UIActivityViewController.
- */
+
+
 
 import UIKit
 
-class ViewController: UITableViewController, NoteViewControllerDelegate {
+class ViewController: UITableViewController, NoteViewControllerDelegate, UISearchResultsUpdating {
+    
     var notes: [Note] = []
+    var filteredNotes: [Note] = []
+    let searchController = UISearchController(searchResultsController: nil)
+    
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,8 +23,20 @@ class ViewController: UITableViewController, NoteViewControllerDelegate {
         navigationItem.title = "Notes"
         navigationController?.navigationBar.prefersLargeTitles = true
         setupToolbarButton()
+        setupSearchController()
         loadNotes()
     }
+    
+    
+    func setupSearchController() {
+        searchController.searchResultsUpdater = self
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.searchBar.placeholder = "Search Notes"
+        navigationItem.searchController = searchController
+        navigationItem.hidesSearchBarWhenScrolling = true
+        definesPresentationContext = true
+    }
+    
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -32,34 +44,46 @@ class ViewController: UITableViewController, NoteViewControllerDelegate {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return notes.count
+        return isFiltering ? filteredNotes.count : notes.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "NoteCell") ?? UITableViewCell(style: .subtitle, reuseIdentifier: "NoteCell")
-        let note = notes[indexPath.row]
+        let note = isFiltering ? filteredNotes[indexPath.row] : notes[indexPath.row]
         cell.textLabel?.text = note.text
         cell.detailTextLabel?.text = DateFormatter.localizedString(from: note.date, dateStyle: .short, timeStyle: .short)
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        
-        let noteEditorVC = NoteViewController()
-        noteEditorVC.note = notes[indexPath.row]
-        noteEditorVC.noteIndex = indexPath.row
-        noteEditorVC.delegate = self
-        
-        let navigationController = UINavigationController(rootViewController: noteEditorVC)
-        navigationController.modalPresentationStyle = .fullScreen
-        present(navigationController, animated: true, completion: nil)
-    }
+         tableView.deselectRow(at: indexPath, animated: true)
+         
+         let noteEditorVC = NoteViewController()
+         let selectedNote = isFiltering ? filteredNotes[indexPath.row] : notes[indexPath.row]
+         noteEditorVC.note = selectedNote
+         noteEditorVC.noteIndex = isFiltering ? notes.firstIndex(where: { $0.text == selectedNote.text }) : indexPath.row
+         noteEditorVC.delegate = self
+         
+         let navigationController = UINavigationController(rootViewController: noteEditorVC)
+         navigationController.modalPresentationStyle = .fullScreen
+         present(navigationController, animated: true, completion: nil)
+     }
+    
     
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { (action, view, completionHandler) in
-            self.notes.remove(at: indexPath.row)
-            NoteManager.shared.saveNotes(self.notes)
+        let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [weak self] (action, view, completionHandler) in
+            guard let self = self else { return }
+            
+            let noteToDelete = self.isFiltering ? self.filteredNotes[indexPath.row] : self.notes[indexPath.row]
+            if let index = self.notes.firstIndex(where: { $0.text == noteToDelete.text }) {
+                self.notes.remove(at: index)
+                NoteManager.shared.saveNotes(self.notes)
+                
+                if self.isFiltering {
+                    self.filteredNotes.remove(at: indexPath.row)
+                }
+            }
+            
             tableView.deleteRows(at: [indexPath], with: .automatic)
             completionHandler(true)
         }
@@ -68,6 +92,32 @@ class ViewController: UITableViewController, NoteViewControllerDelegate {
         let configuration = UISwipeActionsConfiguration(actions: [deleteAction])
         return configuration
     }
+    
+    
+    
+    // MARK: - Search Controller
+    
+    var isFiltering: Bool {
+        return searchController.isActive && !searchBarIsEmpty
+    }
+    
+    var searchBarIsEmpty: Bool {
+        return searchController.searchBar.text?.isEmpty ?? true
+    }
+    
+    func filterContentForSearchText(_ searchText: String) {
+        filteredNotes = notes.filter { note in
+            return note.text.lowercased().contains(searchText.lowercased())
+        }
+        tableView.reloadData()
+    }
+    
+    func updateSearchResults(for searchController: UISearchController) {
+        guard let searchText = searchController.searchBar.text else { return }
+        filterContentForSearchText(searchText)
+    }
+    
+    
     
     
     func setupToolbarButton() {
@@ -93,7 +143,6 @@ class ViewController: UITableViewController, NoteViewControllerDelegate {
         tableView.reloadData()
     }
     
-    
     func didSaveNote(_ note: Note, at index: Int?) {
         if let index = index {
             notes[index] = note
@@ -101,6 +150,11 @@ class ViewController: UITableViewController, NoteViewControllerDelegate {
             notes.append(note)
         }
         NoteManager.shared.saveNotes(notes)
+        
+        if isFiltering {
+            filterContentForSearchText(searchController.searchBar.text ?? "")
+        }
+        
         tableView.reloadData()
     }
     
@@ -108,5 +162,7 @@ class ViewController: UITableViewController, NoteViewControllerDelegate {
     
     
 }
+
+
 
 
