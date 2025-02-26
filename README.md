@@ -7,7 +7,6 @@
 - ```UITableView``` with custom cells showing note preview and timestamp
 - Swipe-to-delete functionality
 - Data persistence using ```UserDefaults``` and ```Codable```
-- Delegate pattern for view controller communication
 - Search functionality with UISearchController
 - Text formatting toolbar with bold, italic, underline, strikethrough etc.
 
