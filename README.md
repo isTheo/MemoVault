@@ -3,7 +3,7 @@
 ### This app mimics core features of iOS Notes app: list view, full-screen editor, and basic note management
 
 
-- MVC architecture ```ViewController``` for notes list and ```NoteViewController``` for editing
+- MVC architecture
 - ```UITableView``` with custom cells showing note preview and timestamp
 - Swipe-to-delete functionality
 - Data persistence using ```UserDefaults``` and ```Codable```
