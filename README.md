@@ -10,7 +10,9 @@
 - Search functionality with UISearchController
 - Text formatting toolbar with bold, italic, underline, strikethrough etc.
 
-![Simulator Screen Recording - iPhone 16 - 2025-01-30 at 17 29 59](https://github.com/user-attachments/assets/18df5374-e549-4c9f-b1fa-dd902116eb95)
+![Simulator Screen Recording - iPhone 14 - 2025-02-26 at 15 28 20](https://github.com/user-attachments/assets/ef1effa5-a937-4fb6-a2f4-99ec47fd79cc)
+
+
 
 
 
